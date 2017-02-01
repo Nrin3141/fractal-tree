@@ -1,30 +1,28 @@
-var lines = [];
-var x = 0;
-var y = -300;
+var len;
+var angle;
 function setup() {
-  var canvas = createCanvas(1600, 800);
-  background(255);
-for (i = 0; i < 10; i++) {
-  lines[i] = new createLine();
-}
-
-
-}
-function draw() {
-  background(255);
-    for (i = 0; i < lines.length; i++) {
-      lines[i].display();
+  var canvas = createCanvas(800, 600);
+  slider = createSlider(0, TWO_PI, PI / 3, 0.01);
+  }
+  function draw() {
+    background(51);
+    translate(width/2, height);
+    angle = slider.value();
+    branch(200, 10);
     }
-}
-function createLine() {
-    this.display = function() {
-        translate(width/2, height);
-        var v = createVector(random(x), random(y));
-        stroke(0);
-        strokeWeight(20);
-        push();
-        line(0,0, v.x, v.y);
-        pop();
-
-    }
+function branch(len, weight) {
+    stroke(random(0, 100),random(100,255),random(100,255))
+    line(0, 0, 0, -len);
+    translate(0, -len);
+    strokeWeight(weight);
+    if (len > 1) {
+      push();
+      rotate(angle);
+      branch(len * 0.67, weight * 0.67);
+      pop();
+      push();
+      rotate(-angle);
+      branch(len * 0.67, weight * 0.67);
+      pop();
+  }
 }
