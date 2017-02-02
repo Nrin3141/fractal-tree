@@ -3,6 +3,7 @@ var angle;
 function setup() {
   var canvas = createCanvas(800, 600);
   slider = createSlider(0, TWO_PI, PI / 3, 0.01);
+  stroke(random(0, 100),random(100,255),random(100,255))
   }
   function draw() {
     background(51);
@@ -11,7 +12,7 @@ function setup() {
     branch(200, 10);
     }
 function branch(len, weight) {
-    stroke(random(0, 100),random(100,255),random(100,255))
+  
     line(0, 0, 0, -len);
     translate(0, -len);
     strokeWeight(weight);
