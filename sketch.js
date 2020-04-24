@@ -1,29 +1,30 @@
-var len;
-var angle;
+const angle = 0.8;
+const maxIterations = 15;
 function setup() {
-  var canvas = createCanvas(800, 600);
-  slider = createSlider(0, TWO_PI, PI / 3, 0.01);
-  stroke(random(0, 100),random(100,255),random(100,255))
+  createCanvas(window.innerWidth, window.innerHeight);
+  background(51);
+  translate(width / 2, height);
+  branch(window.innerHeight / 3, 10, 0);
+}
+
+function branch(len, weight, iteration) {
+  if (iteration > maxIterations) {
+    return;
   }
-  function draw() {
-    background(51);
-    translate(width/2, height);
-    angle = slider.value();
-    branch(200, 10);
-    }
-function branch(len, weight) {
-  
-    line(0, 0, 0, -len);
-    translate(0, -len);
-    strokeWeight(weight);
-    if (len > 1) {
-      push();
-      rotate(angle);
-      branch(len * 0.67, weight * 0.67);
-      pop();
-      push();
-      rotate(-angle);
-      branch(len * 0.67, weight * 0.67);
-      pop();
+
+  strokeWeight(weight);
+  stroke(map(iteration, 0, 10, 100, 150), map(iteration, 0, 10, 100, 255), 100);
+  line(0, 0, 0, -len);
+  translate(0, -len);
+
+  if (len > 1) {
+    push();
+    rotate(angle);
+    branch(len * 0.67, weight * 0.67, iteration + 1);
+    pop();
+    push();
+    rotate(-angle);
+    branch(len * 0.67, weight * 0.67, iteration + 1);
+    pop();
   }
 }
