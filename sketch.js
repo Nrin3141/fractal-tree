@@ -1,9 +1,12 @@
 class Configuration {
   constructor() {
-    this.angle = 10;
-    this.maxIterations = 5;
+    this.angle = 43;
+    this.maxIterations = 8;
     this.branches = 3;
-    this.lenDecay = 2 / 3;
+    this.rootLength = window.innerHeight / 2.5;
+    this.lengthDecay = 0.6;
+    this.widthDecay = 0.8;
+    this.rootWidth = 16;
   }
 }
 
@@ -12,26 +15,37 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   background(51);
   angleMode(DEGREES);
-  translate(width / 2, height);
   config = new Configuration();
-  branch(window.innerHeight / 4, 10, 0, config.maxIterations, config.angle);
+  drawTree();
   const gui = new dat.GUI();
-  let angleController = gui
-    .add(config, "angle", 5, 180 / config.branches)
-    .step(1);
+  let angleController = gui.add(config, "angle", 5, 180).step(1);
   const iterationController = gui.add(config, "maxIterations", 1, 10).step(1);
   const branchController = gui.add(config, "branches", 1, 5).step(1);
+  const rootLengthController = gui.add(
+    config,
+    "rootLength",
+    window.innerHeight / 5,
+    window.innerHeight / 2
+  );
+  const lengthDecayController = gui.add(config, "lengthDecay", 0.1, 0.8);
 
-  angleController.onFinishChange(drawTree);
-  branchController.onFinishChange(drawTree);
-  iterationController.onFinishChange(drawTree);
+  const widthDecayController = gui.add(config, "widthDecay", 0.1, 1);
+  const rootWidthController = gui.add(config, "rootWidth", 10, 60).step(1);
+
+  angleController.onChange(drawTree);
+  rootWidthController.onChange(drawTree);
+  rootLengthController.onChange(drawTree);
+  branchController.onChange(drawTree);
+  iterationController.onChange(drawTree);
+  lengthDecayController.onChange(drawTree);
+  widthDecayController.onChange(drawTree);
 }
 
 function drawTree() {
   background(51);
   resetMatrix();
   translate(width / 2, height);
-  branch(window.innerHeight / 4, 10, 0);
+  branch(config.rootLength, config.rootWidth, 0);
 }
 
 function branch(len, weight, iteration) {
@@ -42,11 +56,16 @@ function branch(len, weight, iteration) {
   stroke(map(iteration, 0, 10, 100, 150), map(iteration, 0, 10, 100, 255), 100);
   line(0, 0, 0, -len);
   translate(0, -len);
-  rotate(config.angle * Math.floor(config.branches / 2));
+  rotate(
+    config.angle *
+      (config.branches % 2 === 0
+        ? Math.floor(config.branches / 2) - 0.5
+        : Math.floor(config.branches / 2))
+  );
   for (let i = 0; i < config.branches; i++) {
     push();
     rotate(-config.angle * i);
-    branch(len * config.lenDecay, weight * config.lenDecay, iteration + 1);
+    branch(len * config.lengthDecay, weight * config.widthDecay, iteration + 1);
     pop();
   }
 }
