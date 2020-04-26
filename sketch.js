@@ -28,7 +28,6 @@ function setup() {
     window.innerHeight / 2
   );
   const lengthDecayController = gui.add(config, "lengthDecay", 0.1, 0.8);
-
   const widthDecayController = gui.add(config, "widthDecay", 0.1, 1);
   const rootWidthController = gui.add(config, "rootWidth", 10, 60).step(1);
 
