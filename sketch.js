@@ -7,6 +7,8 @@ class Configuration {
     this.lengthDecay = 0.6;
     this.widthDecay = 0.8;
     this.rootWidth = 16;
+    this.name = "img_name";
+    this.save = () => saveCanvas(canvas, this.name, "jpg");
   }
 }
 
@@ -18,18 +20,23 @@ function setup() {
   config = new Configuration();
   drawTree();
   const gui = new dat.GUI();
-  let angleController = gui.add(config, "angle", 5, 180).step(1);
-  const iterationController = gui.add(config, "maxIterations", 1, 10).step(1);
-  const branchController = gui.add(config, "branches", 1, 5).step(1);
-  const rootLengthController = gui.add(
+  const o = gui.addFolder("Options");
+  let angleController = o.add(config, "angle", 5, 180).step(1);
+  const iterationController = o.add(config, "maxIterations", 1, 10).step(1);
+  const branchController = o.add(config, "branches", 1, 5).step(1);
+  const rootLengthController = o.add(
     config,
     "rootLength",
     window.innerHeight / 5,
     window.innerHeight / 2
   );
-  const lengthDecayController = gui.add(config, "lengthDecay", 0.1, 0.8);
-  const widthDecayController = gui.add(config, "widthDecay", 0.1, 1);
-  const rootWidthController = gui.add(config, "rootWidth", 10, 60).step(1);
+  const lengthDecayController = o.add(config, "lengthDecay", 0.1, 0.8);
+  const widthDecayController = o.add(config, "widthDecay", 0.1, 1);
+  const rootWidthController = o.add(config, "rootWidth", 10, 60).step(1);
+
+  const saving = gui.addFolder("Save File");
+  saving.add(config, "name");
+  saving.add(config, "save");
 
   angleController.onChange(drawTree);
   rootWidthController.onChange(drawTree);
